@@ -38,6 +38,9 @@ use function is_string;
  */
 final class Sort
 {
+    const APPLY_ALWAYS = 1;
+    const APPLY_IF_SPECIFIED = 2;
+
     /**
      * Logical fields config.
      *
@@ -83,6 +86,7 @@ final class Sort
                 'asc' => [$fieldName => SORT_ASC],
                 'desc' => [$fieldName => SORT_DESC],
                 'default' => 'asc',
+                'apply' => self::APPLY_IF_SPECIFIED
             ], $fieldConfig);
         }
 
@@ -265,7 +269,8 @@ final class Sort
         }
 
         foreach ($config as $field => $fieldConfig) {
-            $criteria += $fieldConfig[$fieldConfig['default']];
+            if($fieldConfig['apply'] === self::APPLY_ALWAYS)
+                $criteria += $fieldConfig[$fieldConfig['default']];
         }
 
         return $criteria;
